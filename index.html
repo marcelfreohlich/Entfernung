@@ -3,22 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Designer Finder</title>
+  <title>Designer abfrage</title>
   <style>
-    body { font-family: Arial, sans-serif; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    input { width: 100%; padding: 10px; margin: 10px 0; }
-    button { padding: 10px; background-color: #4CAF50; color: white; border: none; width: 100%; cursor: pointer; }
-    button:hover { background-color: #45a049; }
-    .result { margin-top: 20px; font-size: 1.2em; }
+    /* Gesamtstil */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #FFD700, #FFFFFF);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container */
+    .container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      max-width: 400px;
+      text-align: center;
+      width: 90%;
+    }
+
+    /* Logo */
+    .logo {
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      max-width: 200px;
+    }
+
+    /* Überschrift */
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* Eingabefeld */
+    input {
+      width: calc(100% - 24px); /* Passt das Eingabefeld an die Breite an */
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 1em;
+    }
+
+    /* Button */
+    button {
+      background-color: #FFD700;
+      color: #333;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #FFC300;
+    }
+
+    /* Ergebnisbox */
+    .result {
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #555;
+      text-align: left;
+    }
+
+    /* Style für jedes Ergebnis */
+    .designer {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>Finde alle Designer</h1>
-    <input type="text" id="customerAddress" placeholder="Gib die Adresse des Kunden ein (Straße, PLZ, Ort)" />
-    <button onclick="findAllDesigners()">Suchen</button>
+    <!-- Logo -->
+    <div class="logo">
+      <img src="https://www.karriere.herold.at/uploads/oGbINN7E/320x0_480x0/HEROLD_Logo_ClaimSeite_RGB_Classic__msi___png.webp" alt="Herold Logo">
+    </div>
+
+    <!-- Titel -->
+    <h1>Welcher Desinger ist näher?</h1>
+
+    <!-- Eingabefeld -->
+    <input type="text" id="customerAddress" placeholder="Adresse des Kunden eingeben" />
+
+    <!-- Button -->
+    <button onclick="findNearestDesigner()">Suchen</button>
+
+    <!-- Ergebnisanzeige -->
     <div class="result" id="result"></div>
   </div>
 
@@ -28,12 +112,12 @@
       { name: "Michi", address: "Josef Musser-Straße 11, 2514, Wienersdorf" },
       { name: "Pek", address: "Keutschach 41, 9074, Keutschach" },
       { name: "Sebi", address: "Unteraumühlweg 6a, 5400, Hallein" },
-      { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" }
+      { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" },
     ];
 
-    const apiKey = '0736af42b54a41329622b7de76c8e050'; // Dein API-Schlüssel
+    const apiKey = '0736af42b54a41329622b7de76c8e050'; // API-Schlüssel einfügen
 
-    function findAllDesigners() {
+    function findNearestDesigner() {
       const customerAddress = document.getElementById("customerAddress").value;
       if (!customerAddress) {
         document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
@@ -44,9 +128,8 @@
       $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
         if (data.results && data.results.length > 0) {
           const customerLocation = data.results[0].geometry;
-          const designerResults = [];
-
-          let processedCount = 0;
+          const results = [];
+          let completedRequests = 0;
 
           // Vergleiche mit den Designer-Adressen
           designers.forEach(designer => {
@@ -54,29 +137,20 @@
               if (designerData.results && designerData.results.length > 0) {
                 const designerLocation = designerData.results[0].geometry;
                 const distance = calculateDistance(customerLocation, designerLocation);
-
-                // Berechne Stunden und Minuten für die Fahrtzeit
-                const travelTime = (distance / 50) * 60; // Annahme: Durchschnittliche Fahrgeschwindigkeit 50 km/h
-                const hours = Math.floor(travelTime / 60); // Ganze Stunden
-                const minutes = Math.round(travelTime % 60); // Restliche Minuten
-
-                // Designer mit Fahrtzeit hinzufügen
-                designerResults.push({
+                const travelTime = (distance / 50) * 60;
+                const hours = Math.floor(travelTime / 60);
+                const minutes = Math.round(travelTime % 60);
+                results.push({
                   name: designer.name,
                   travelTime: `${hours} Stunden und ${minutes} Minuten`,
-                  distance: distance
+                  distance,
                 });
+              }
 
-                processedCount++;
-
-                // Sobald alle Designer verarbeitet wurden
-                if (processedCount === designers.length) {
-                  // Sortiere nach Entfernung
-                  designerResults.sort((a, b) => a.distance - b.distance);
-
-                  // Ergebnisse anzeigen
-                  displayAllResults(designerResults);
-                }
+              completedRequests++;
+              if (completedRequests === designers.length) {
+                results.sort((a, b) => a.distance - b.distance); // Sortiere nach Entfernung
+                displayResults(results);
               }
             });
           });
@@ -93,24 +167,20 @@
       const dLat = lat2 - lat1;
       const dLon = lon2 - lon1;
       const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(lat1) * Math.cos(lat2) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        Math.cos(lat1) * Math.cos(lat2) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c; // Entfernung in km
     }
 
-    function displayAllResults(designers) {
+    function displayResults(results) {
       const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = "<h2>Ergebnisse:</h2>";
-
-      designers.forEach(designer => {
-        const designerHTML = `
-          <p>
-            <strong>${designer.name}</strong>: ${designer.travelTime}
-          </p>
-        `;
-        resultDiv.innerHTML += designerHTML;
-      });
+      resultDiv.innerHTML = results.map(r => `
+        <div class="designer">
+          <strong>Designer: </strong>${r.name} <br>
+          <strong>Fahrzeit: </strong>${r.travelTime}
+        </div>
+      `).join("");
     }
   </script>
 </body>
