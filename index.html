@@ -18,15 +18,33 @@
       min-height: 100vh;
     }
 
-    /* Container */
-    .container {
+    /* Container für das gesamte Layout */
+    .main-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 1200px;
+      width: 100%;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    /* Container für Designer Finder */
+    .designer-container {
       background: white;
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       padding: 30px;
-      max-width: 400px;
-      text-align: center;
-      width: 90%;
+      width: 48%; /* Platz für das Widget daneben */
+    }
+
+    /* Container für TuCalendi Widget */
+    .widget-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 48%; /* Gleiche Breite wie der Designer Finder */
     }
 
     /* Logo */
@@ -38,16 +56,9 @@
       max-width: 200px;
     }
 
-    /* Überschrift */
-    h1 {
-      font-size: 1.8em;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
     /* Eingabefeld */
     input {
-      width: calc(100% - 24px); /* Passt das Eingabefeld an die Breite an */
+      width: calc(100% - 24px);
       padding: 12px;
       border: 1px solid #ddd;
       border-radius: 10px;
@@ -84,26 +95,33 @@
     .designer {
       margin-bottom: 10px;
     }
+
+    /* Stil für das TuCalendi Widget */
+    #tucalendi_iframe_root {
+      width: 100%;
+      height: 400px; /* Du kannst die Höhe nach Bedarf anpassen */
+      border-radius: 15px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Logo -->
-    <div class="logo">
-      <img src="https://www.karriere.herold.at/uploads/oGbINN7E/320x0_480x0/HEROLD_Logo_ClaimSeite_RGB_Classic__msi___png.webp" alt="Herold Logo">
+  <div class="main-container">
+    <!-- Designer Finder -->
+    <div class="designer-container">
+      <div class="logo">
+        <img src="https://www.karriere.herold.at/uploads/oGbINN7E/320x0_480x0/HEROLD_Logo_ClaimSeite_RGB_Classic__msi___png.webp" alt="Herold Logo">
+      </div>
+      <h1>Finde den nächsten Designer</h1>
+      <input type="text" id="customerAddress" placeholder="Adresse des Kunden eingeben" />
+      <button onclick="findNearestDesigner()">Suchen</button>
+      <div class="result" id="result"></div>
     </div>
 
-    <!-- Titel -->
-    <h1>Welcher Desinger ist näher?</h1>
-
-    <!-- Eingabefeld -->
-    <input type="text" id="customerAddress" placeholder="Adresse des Kunden eingeben" />
-
-    <!-- Button -->
-    <button onclick="findNearestDesigner()">Suchen</button>
-
-    <!-- Ergebnisanzeige -->
-    <div class="result" id="result"></div>
+    <!-- TuCalendi Widget -->
+    <div class="widget-container">
+      <div id="tucalendi_iframe_root" data-content-id="websiteservice.meetfy.online/s/websitezuteilung" data-content-options=""></div>
+      <script type="text/javascript" src="https://widgets.tucalendi.com/assets/iframewidget_rt.min.js"></script>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
