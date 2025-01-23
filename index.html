@@ -16,9 +16,9 @@
 <body>
 
   <div class="container">
-    <h1>Finde den nächsten Designer</h1>
+    <h1>Finde alle Designer</h1>
     <input type="text" id="customerAddress" placeholder="Gib die Adresse des Kunden ein (Straße, PLZ, Ort)" />
-    <button onclick="findNearestDesigner()">Suchen</button>
+    <button onclick="findAllDesigners()">Suchen</button>
     <div class="result" id="result"></div>
   </div>
 
@@ -28,12 +28,12 @@
       { name: "Michi", address: "Josef Musser-Straße 11, 2514, Wienersdorf" },
       { name: "Pek", address: "Keutschach 41, 9074, Keutschach" },
       { name: "Sebi", address: "Unteraumühlweg 6a, 5400, Hallein" },
-      { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" },
+      { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" }
     ];
 
-    const apiKey = '0736af42b54a41329622b7de76c8e050'; // API-Schlüssel einfügen
+    const apiKey = '0736af42b54a41329622b7de76c8e050'; // Dein API-Schlüssel
 
-    function findNearestDesigner() {
+    function findAllDesigners() {
       const customerAddress = document.getElementById("customerAddress").value;
       if (!customerAddress) {
         document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
@@ -44,8 +44,9 @@
       $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
         if (data.results && data.results.length > 0) {
           const customerLocation = data.results[0].geometry;
-          let nearestDesigner = null;
-          let minDistance = Infinity;
+          const designerResults = [];
+
+          let processedCount = 0;
 
           // Vergleiche mit den Designer-Adressen
           designers.forEach(designer => {
@@ -59,16 +60,22 @@
                 const hours = Math.floor(travelTime / 60); // Ganze Stunden
                 const minutes = Math.round(travelTime % 60); // Restliche Minuten
 
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  nearestDesigner = {
-                    name: designer.name,
-                    travelTime: `${hours} Stunden und ${minutes} Minuten`
-                  };
-                }
+                // Designer mit Fahrtzeit hinzufügen
+                designerResults.push({
+                  name: designer.name,
+                  travelTime: `${hours} Stunden und ${minutes} Minuten`,
+                  distance: distance
+                });
 
-                if (designer === designers[designers.length - 1]) {
-                  displayResult(nearestDesigner);
+                processedCount++;
+
+                // Sobald alle Designer verarbeitet wurden
+                if (processedCount === designers.length) {
+                  // Sortiere nach Entfernung
+                  designerResults.sort((a, b) => a.distance - b.distance);
+
+                  // Ergebnisse anzeigen
+                  displayAllResults(designerResults);
                 }
               }
             });
@@ -89,15 +96,21 @@
                 Math.cos(lat1) * Math.cos(lat2) *
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c; // Entfernungswert in km
+      return R * c; // Entfernung in km
     }
 
-    function displayResult(designer) {
-      if (designer) {
-        document.getElementById("result").innerHTML = `Der nächstgelegene Designer ist: ${designer.name} (Fahrtzeit: ${designer.travelTime})`;
-      } else {
-        document.getElementById("result").innerHTML = "Kein Designer gefunden.";
-      }
+    function displayAllResults(designers) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "<h2>Ergebnisse:</h2>";
+
+      designers.forEach(designer => {
+        const designerHTML = `
+          <p>
+            <strong>${designer.name}</strong>: ${designer.travelTime}
+          </p>
+        `;
+        resultDiv.innerHTML += designerHTML;
+      });
     }
   </script>
 </body>
