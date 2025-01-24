@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Designer abfrage</title>
+  <title>Client-Tool</title>
   <style>
-    /* Gesamtstil */
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -18,56 +17,62 @@
       min-height: 100vh;
     }
 
-    /* Container für das gesamte Layout */
-    .main-container {
+    .container {
+      width: 90%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #000;
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 55%;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 150px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  
+    }
+
+    .wrapper {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      max-width: 1200px;
-      width: 100%;
-      padding: 20px;
       gap: 20px;
-    }
-
-    /* Container für Designer Finder */
-    .designer-container {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      width: 48%; /* Platz für das Widget daneben */
-    }
-
-    /* Container für TuCalendi Widget */
-    .widget-container {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      width: 48%; /* Gleiche Breite wie der Designer Finder */
-    }
-
-    /* Logo */
-    .logo {
       margin-bottom: 20px;
     }
 
-    .logo img {
-      max-width: 200px;
+    .search-container, .tucalendi-container {
+      width: 48%;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Eingabefeld */
-    input {
-      width: calc(100% - 24px);
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+    .search-container h2 {
+      text-align: center;
+      color: #333;
       margin-bottom: 20px;
-      font-size: 1em;
     }
 
-    /* Button */
-    button {
+    .search-container .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 300px;
+    }
+
+    .search-container input, .search-container button {
+      padding: 10px;
+      width: calc(100% - 20px);
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .search-container button {
       background-color: #FFD700;
       color: #333;
       border: none;
@@ -79,52 +84,99 @@
       transition: background-color 0.3s ease;
     }
 
-    button:hover {
+    .search-container button:hover {
       background-color: #FFC300;
     }
 
-    /* Ergebnisbox */
     .result {
       margin-top: 20px;
       font-size: 1.1em;
       color: #555;
       text-align: left;
     }
+    
+    /* Stil für das erste Designer-Ergebnis */
+    ul.designer-list {
+  list-style-type: none; /* Entfernt die Aufzählungspunkte */
+  padding: 0; /* Entfernt den inneren Abstand */
+  margin: 0; /* Entfernt den äußeren Abstand */
+}
 
-    /* Style für jedes Ergebnis */
+ul.designer-list .highlighted {
+  background-color: #FFD700; /* Gelber Hintergrund für das hervorgehobene Element */
+  color: black; /* schwarz Schrift für das hervorgehobene Element */
+  font-weight: bold; /* Fetter Text */
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-Size: 1.5em;
+}
+
     .designer {
       margin-bottom: 10px;
     }
 
-    /* Stil für das TuCalendi Widget */
-    #tucalendi_iframe_root {
+    .tucalendi-container iframe, .excel-container iframe {
       width: 100%;
-      height: 400px; /* Du kannst die Höhe nach Bedarf anpassen */
-      border-radius: 15px;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
     }
+
+    .excel-container {
+      width: 97.5%;
+      background-color: #ffffff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-container img {
+      width: 400px;
+      height: auto;
+    }
+
   </style>
 </head>
 <body>
-  <div class="main-container">
-    <!-- Designer Finder -->
-    <div class="designer-container">
-      <div class="logo">
-        <img src="https://www.karriere.herold.at/uploads/oGbINN7E/320x0_480x0/HEROLD_Logo_ClaimSeite_RGB_Classic__msi___png.webp" alt="Herold Logo">
+
+  <div class="container">
+    <div class="logo-container">
+         </div>
+
+    <h1>Kunde gesucht, Designer gefunden – Termin buchen!</h1>
+
+    <div class="wrapper">
+      <div class="search-container">
+        <img src="https://www.karriere.herold.at/uploads/oGbINN7E/320x0_480x0/HEROLD_Logo_ClaimSeite_RGB_Classic__msi___png.webp" alt="Herold Logo" class="logo">
+
+        <h2>Finde den nächsten Designer</h2>
+        <input type="text" id="customerAddress" placeholder="Gib die Adresse des Kunden ein (Straße, PLZ, Ort)" />
+        <button onclick="findNearestDesigner()">Suchen</button>
+        <div class="result" id="result"></div>
+        <ul class="designer-list" id="designer-list"></ul>
       </div>
-      <h1>Finde den nächsten Designer</h1>
-      <input type="text" id="customerAddress" placeholder="Adresse des Kunden eingeben" />
-      <button onclick="findNearestDesigner()">Suchen</button>
-      <div class="result" id="result"></div>
+
+      <div class="tucalendi-container">
+        <h2>Terminvereinbarung</h2>
+        <div id="tucalendi_iframe_root" data-content-id="websiteservice.meetfy.online/s/websitezuteilung" data-content-options=""></div>
+        <script type="text/javascript" src="https://widgets.tucalendi.com/assets/iframewidget_rt.min.js"></script>
+      </div>
     </div>
 
-    <!-- TuCalendi Widget -->
-    <div class="widget-container">
-      <div id="tucalendi_iframe_root" data-content-id="websiteservice.meetfy.online/s/websitezuteilung" data-content-options=""></div>
-      <script type="text/javascript" src="https://widgets.tucalendi.com/assets/iframewidget_rt.min.js"></script>
+    <div class="excel-container">
+      <h2>Excel-Daten</h2>
+      <iframe width="700" height="776" frameborder="0" scrolling="no" src="https://bmdo.sharepoint.com/sites/WebsiteserviceProduct/_layouts/15/Doc.aspx?sourcedoc={d92b6601-cc59-47a5-a5b6-b584a13b8495}&action=embedview&wdAllowInteractivity=True&AllowTyping=True&Item='Sheet1'!B59%3AAG91&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     const designers = [
       { name: "Michi", address: "Josef Musser-Straße 11, 2514, Wienersdorf" },
@@ -193,11 +245,12 @@
 
     function displayResults(results) {
       const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = results.map(r => `
-        <div class="designer">
+      const designerList = document.getElementById("designer-list");
+      designerList.innerHTML = results.map((r, index) => `
+        <li class="designer ${index === 0 ? 'highlighted' : ''}">
           <strong>Designer: </strong>${r.name} <br>
           <strong>Fahrzeit: </strong>${r.travelTime}
-        </div>
+        </li>
       `).join("");
     }
   </script>
