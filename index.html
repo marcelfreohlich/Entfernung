@@ -193,17 +193,21 @@ fetch('https://server-zzzi.onrender.com/get-api-key')
   .then(response => response.json())
   .then(data => {
     console.log('API Key:', data.apiKey);
-    // Hier kannst du den API-Key verwenden, um mit OpenCage API zu arbeiten
+    // Speichere den API-Schlüssel in der Variablen
+    apiKey = data.apiKey;
   })
   .catch(error => console.error('Error:', error));
 
-    function findNearestDesigner() {
-      const customerAddress = document.getElementById("customerAddress").value;
-      if (!customerAddress) {
-        document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
-        return;
+ function findNearestDesigner(apiKey) {
+   const customerAddress = document.getElementById("customerAddress").value;
+   if (!customerAddress) {
+      document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
+      return;
       }
-
+     if (!apiKey) {
+       document.getElementById("result").innerHTML = "API Key wurde nicht geladen!";
+       return;
+     }
       // Geocoding des Kundenstandorts
       $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
         if (data.results && data.results.length > 0) {
