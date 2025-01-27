@@ -185,7 +185,19 @@ ul.designer-list .highlighted {
       { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" },
     ];
 
-    const apiKey = '0736af42b54a41329622b7de76c8e050'; // API-Schlüssel einfügen
+    let apiKey;
+
+// API-Key sicher vom Backend abrufen
+fetch('http://127.0.0.1:5000/get-api-key') // Adresse deines Python-Servers
+  .then(response => response.json())
+  .then(data => {
+    apiKey = data.apiKey; // API-Key speichern
+    console.log('API-Key erfolgreich abgerufen:', apiKey);
+  })
+  .catch(error => {
+    console.error('Fehler beim Abrufen des API-Keys:', error);
+  });
+
 
     function findNearestDesigner() {
       const customerAddress = document.getElementById("customerAddress").value;
