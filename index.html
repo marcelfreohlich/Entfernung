@@ -195,7 +195,17 @@ fetch('https://server-zzzi.onrender.com/get-api-key')
     console.log('API Key:', data.apiKey);
     // Speichere den API-Schlüssel in der Variablen
     apiKey = data.apiKey;
+    
+    if (apiKey) {
+      // Nur aufrufen, wenn der API-Schlüssel vorhanden ist
+      console.log('API Key erfolgreich geladen');
+    } else {
+      console.error("API Key konnte nicht geladen werden.");
+    }
   })
+  .catch(error => {
+    console.error('Error beim Abrufen des API-Schlüssels:', error);
+  });
   .catch(error => console.error('Error:', error));
 
  function findNearestDesigner(apiKey) {
