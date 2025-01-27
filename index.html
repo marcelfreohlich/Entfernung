@@ -189,16 +189,13 @@ ul.designer-list .highlighted {
     let apiKey;
 
 // API-Key sicher vom Backend abrufen
-fetch('http://127.0.0.1:5000/get-api-key') // Adresse deines Python-Servers
+fetch('https://deine-render-app-url.com/get-api-key')
   .then(response => response.json())
   .then(data => {
-    apiKey = data.apiKey; // API-Key speichern
-    console.log('API-Key erfolgreich abgerufen:', apiKey);
+    console.log('API Key:', data.apiKey);
+    // Hier kannst du den API-Key verwenden, um mit OpenCage API zu arbeiten
   })
-  .catch(error => {
-    console.error('Fehler beim Abrufen des API-Keys:', error);
-  });
-
+  .catch(error => console.error('Error:', error));
 
     function findNearestDesigner() {
       const customerAddress = document.getElementById("customerAddress").value;
