@@ -209,12 +209,22 @@
 
     function findNearestDesigner() {
       const customerAddress = document.getElementById("customerAddress").value;
+      const searchButton = document.getElementById("search-button");
+
+      // Button-Text ändern während der Anfrage läuft
+      searchButton.innerText = "Chill, ich such doch schon den Nächsten Designer!";
+      searchButton.disabled = true; // Button deaktivieren, um mehrfaches Klicken zu verhindern
+
       if (!customerAddress) {
         document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
+        searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
+        searchButton.disabled = false; // Button wieder aktivieren
         return;
       }
       if (!apiKey) {
         document.getElementById("result").innerHTML = "API Key wurde nicht geladen!";
+        searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
+        searchButton.disabled = false; // Button wieder aktivieren
         return;
       }
       // Geocoding des Kundenstandorts
@@ -244,6 +254,8 @@
               if (completedRequests === designers.length) {
                 results.sort((a, b) => a.distance - b.distance); // Sortiere nach Entfernung
                  displayResults(results);
+                 searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
+                 searchButton.disabled = false; // Button wieder aktivieren
                }
             });
          });
