@@ -221,6 +221,7 @@
     }
 
     // Geocoding des Kundenstandorts
+    console.log('Anfrage wird gesendet an:', `https://adresse.onrender.com/designers?address=${encodeURIComponent(customerAddress)}`);
     $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
       if (data.results && data.results.length > 0) {
         const customerLocation = data.results[0].geometry;
