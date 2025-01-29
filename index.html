@@ -95,61 +95,20 @@
       text-align: left;
     }
     
-    /* Stil für das erste Designer-Ergebnis */
-    ul.designer-list {
-      list-style-type: none; /* Entfernt die Aufzählungspunkte */
-      padding: 0; /* Entfernt den inneren Abstand */
-      margin: 0; /* Entfernt den äußeren Abstand */
-    }
-
     ul.designer-list .highlighted {
-      background-color: #FFD700; /* Gelber Hintergrund für das hervorgehobene Element */
-      color: black; /* schwarz Schrift für das hervorgehobene Element */
-      font-weight: bold; /* Fetter Text */
+      background-color: #FFD700;
+      color: black;
+      font-weight: bold;
       padding: 10px;
       border-radius: 10px;
       text-align: center;
       font-size: 1.5em;
     }
-
-    .designer {
-      margin-bottom: 10px;
-    }
-
-    .tucalendi-container iframe, .excel-container iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .excel-container {
-      width: 97.5%;
-      background-color: #ffffff;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo-container {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .logo-container img {
-      width: 400px;
-      height: auto;
-    }
-
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="logo-container">
-         </div>
-
     <h1>Kunde gesucht, Designer gefunden – Termin buchen!</h1>
 
     <div class="wrapper">
@@ -169,13 +128,9 @@
         <script type="text/javascript" src="https://widgets.tucalendi.com/assets/iframewidget_rt.min.js"></script>
       </div>
     </div>
-<!-- Google Sheets iFrame 
-<div class="excel-container">
-  <h2>Projekt-Tabelle</h2>
-  <iframe width="700" height="800" frameborder="0" scrolling="no" src="https://bmdo-my.sharepoint.com/personal/dominik_butzchen_websitebutler_de/_layouts/15/Doc.aspx?sourcedoc={9227943e-704b-4e97-bfbd-a33f2a99269a}&action=embedview&wdAllowInteractivity=False&ActiveCell='Sheet1'!B59&Item='Sheet1'!B59%3AAG91&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>   </div>
   </div>
--->
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   let apiKey = null;
 
@@ -186,7 +141,7 @@
         apiKey = data.apiKey;
         if (apiKey) {
           console.log('API Key erfolgreich geladen');
-          document.getElementById('search-button').disabled = false;  // Button aktivieren, wenn API-Key geladen ist
+          document.getElementById('search-button').disabled = false;  
         } else {
           console.error("API Key konnte nicht geladen werden.");
         }
@@ -196,40 +151,39 @@
       });
   }
 
-  // Beim Laden der Seite den API-Schlüssel abrufen
   window.onload = fetchApiKey;
 
   async function findNearestDesigner() {
     const customerAddress = document.getElementById("customerAddress").value;
     const searchButton = document.getElementById("search-button");
 
-    // Button-Text ändern während der Anfrage läuft
     searchButton.innerText = "Chill, ich such doch schon den Nächsten Designer!";
-    searchButton.disabled = true; // Button deaktivieren, um mehrfaches Klicken zu verhindern
+    searchButton.disabled = true;
 
     if (!customerAddress) {
       document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
-      searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-      searchButton.disabled = false; // Button wieder aktivieren
+      searchButton.innerText = "Suche Designer";
+      searchButton.disabled = false;
       return;
     }
     if (!apiKey) {
       document.getElementById("result").innerHTML = "API Key wurde nicht geladen!";
-      searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-      searchButton.disabled = false; // Button wieder aktivieren
+      searchButton.innerText = "Suche Designer";
+      searchButton.disabled = false;
       return;
     }
 
-    // Geocoding des Kundenstandorts
-    console.log('Anfrage wird gesendet an:', `https://adresse.onrender.com/designers?address=${encodeURIComponent(customerAddress)}`);
     $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
       if (data.results && data.results.length > 0) {
         const customerLocation = data.results[0].geometry;
 
-        // Anfrage an Backend, um den nächsten Designer zu finden
-        $.get('https://adresse.onrender.com/designers', JSON.stringify({ address: customerAddress }), function (response) {
-          if (response.name) {
-            document.getElementById("result").innerHTML = `Nächster Designer: ${response.name}`;
+        console.log('Anfrage wird gesendet an:', `https://adresse.onrender.com/designers?address=${encodeURIComponent(customerAddress)}`);
+        
+        $.get(`https://adresse.onrender.com/designers?address=${encodeURIComponent(customerAddress)}`, function (response) {
+          if (response.length > 0) {
+            const designer = response[0];
+            document.getElementById("result").innerHTML = `Nächster Designer: ${designer.name}`;
+            document.getElementById("designer-list").innerHTML = `<li class="highlighted">${designer.name} - ${designer.address}</li>`;
           } else {
             document.getElementById("result").innerHTML = "Kein Designer gefunden.";
           }
@@ -240,7 +194,6 @@
         document.getElementById("result").innerHTML = "Adresse konnte nicht gefunden werden!";
       }
 
-      // Button-Text zurücksetzen
       searchButton.innerText = "Suche Designer";
       searchButton.disabled = false;
     });
@@ -248,8 +201,8 @@
 
   document.getElementById("customerAddress").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
-      event.preventDefault();  // Verhindert die Standardaktion der Enter-Taste (z. B. Formularabsendung)
-      document.getElementById("search-button").click();  // Klickt den Such-Button
+      event.preventDefault();  
+      document.getElementById("search-button").click();  
     }
   });
 </script>
