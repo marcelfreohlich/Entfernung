@@ -226,7 +226,7 @@
         const customerLocation = data.results[0].geometry;
 
         // Anfrage an Backend, um den nächsten Designer zu finden
-        $.post('https://adresse.onrender.com/designers', JSON.stringify({ address: customerAddress }), function (response) {
+        $.get('https://adresse.onrender.com/designers', JSON.stringify({ address: customerAddress }), function (response) {
           if (response.name) {
             document.getElementById("result").innerHTML = `Nächster Designer: ${response.name}`;
           } else {
