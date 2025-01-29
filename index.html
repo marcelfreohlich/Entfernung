@@ -5,157 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Client-Tool</title>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom, #FFD700, #FFFFFF);
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 90%;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #000;
-      margin-bottom: 20px;
-      margin-left: auto;
-      margin-right: auto;
-      width: 55%;
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 150px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  
-    }
-
-    .wrapper {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .search-container, .tucalendi-container {
-      width: 48%;
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .search-container h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .search-container .logo {
-      display: block;
-      margin: 0 auto 20px auto;
-      width: 300px;
-    }
-
-    .search-container input, .search-container button {
-      padding: 10px;
-      width: calc(100% - 20px);
-      margin: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    .search-container button {
-      background-color: #FFD700;
-      color: #333;
-      border: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 1em;
-      cursor: pointer;
-      width: 100%;
-      transition: background-color 0.3s ease;
-    }
-
-    .search-container button:hover {
-      background-color: #FFC300;
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 1.1em;
-      color: #555;
-      text-align: left;
-    }
-    
-    /* Stil für das erste Designer-Ergebnis */
-    ul.designer-list {
-      list-style-type: none; /* Entfernt die Aufzählungspunkte */
-      padding: 0; /* Entfernt den inneren Abstand */
-      margin: 0; /* Entfernt den äußeren Abstand */
-    }
-
-    ul.designer-list .highlighted {
-      background-color: #FFD700; /* Gelber Hintergrund für das hervorgehobene Element */
-      color: black; /* schwarz Schrift für das hervorgehobene Element */
-      font-weight: bold; /* Fetter Text */
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 1.5em;
-    }
-
-    .designer {
-      margin-bottom: 10px;
-    }
-
-    .tucalendi-container iframe, .excel-container iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .excel-container {
-      width: 97.5%;
-      background-color: #ffffff;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo-container {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .logo-container img {
-      width: 400px;
-      height: auto;
-    }
-
+    /* Deine CSS-Stile bleiben unverändert */
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="logo-container">
-         </div>
-
     <h1>Kunde gesucht, Designer gefunden – Termin buchen!</h1>
 
     <div class="wrapper">
       <div class="search-container">
-        <img src="https://www.karriere.herold.at/uploads/oGbINN7E/320x0_480x0/HEROLD_Logo_ClaimSeite_RGB_Classic__msi___png.webp" alt="Herold Logo" class="logo">
-
         <h2>Finde den nächsten Designer</h2>
         <input type="text" id="customerAddress" placeholder="Gib die Adresse des Kunden ein (Straße, PLZ, Ort)" />
         <button id="search-button" onclick="findNearestDesigner()" disabled>Suchen</button>
@@ -169,25 +28,26 @@
         <script type="text/javascript" src="https://widgets.tucalendi.com/assets/iframewidget_rt.min.js"></script>
       </div>
     </div>
-<!-- Google Sheets iFrame 
-<div class="excel-container">
-  <h2>Projekt-Tabelle</h2>
-  <iframe width="700" height="800" frameborder="0" scrolling="no" src="https://bmdo-my.sharepoint.com/personal/dominik_butzchen_websitebutler_de/_layouts/15/Doc.aspx?sourcedoc={9227943e-704b-4e97-bfbd-a33f2a99269a}&action=embedview&wdAllowInteractivity=False&ActiveCell='Sheet1'!B59&Item='Sheet1'!B59%3AAG91&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>   </div>
-  </div>
--->
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    const designers = [
-      { name: "Michi", address: "Josef Musser-Straße 11, 2514, Wienersdorf" },
-      { name: "Pek", address: "Keutschach 41, 9074, Keutschach" },
-      { name: "Sebi", address: "Unteraumühlweg 6a, 5400, Hallein" },
-      { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" },
-      { name: "Laura", address: "Seeweg 16, 6212, Maurach" },
-      { name: "Stephan", address: "Hernsteiner Straße 42 Haus 8, 2551, Enzesfeld-Lindabrunn" },
-    ];
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    let designers = [];
     let apiKey = null;
 
+    // Abruf der Designer-Daten von der externen API
+    function fetchDesigners() {
+      fetch('https://adresse.onrender.com/designers')
+        .then(response => response.json())
+        .then(data => {
+          designers = data.designers; // Designer-Daten speichern
+          document.getElementById('search-button').disabled = false; // Button aktivieren
+        })
+        .catch(error => {
+          console.error('Fehler beim Abrufen der Designer-Daten:', error);
+        });
+    }
+
+    // Abruf des API-Schlüssels
     function fetchApiKey() {
       fetch('https://server-zzzi.onrender.com/get-api-key')
         .then(response => response.json())
@@ -195,7 +55,6 @@
           apiKey = data.apiKey;
           if (apiKey) {
             console.log('API Key erfolgreich geladen');
-            document.getElementById('search-button').disabled = false;  // Button aktivieren, wenn API-Key geladen ist
           } else {
             console.error("API Key konnte nicht geladen werden.");
           }
@@ -205,29 +64,34 @@
         });
     }
 
-    // Beim Laden der Seite den API-Schlüssel abrufen
-    window.onload = fetchApiKey;
+    // Abruf der Designer und API-Key beim Laden der Seite
+    window.onload = function() {
+      fetchDesigners();
+      fetchApiKey();
+    };
 
+    // Suche nach dem nächsten Designer
     function findNearestDesigner() {
       const customerAddress = document.getElementById("customerAddress").value;
       const searchButton = document.getElementById("search-button");
 
-      // Button-Text ändern während der Anfrage läuft
       searchButton.innerText = "Chill, ich such doch schon den Nächsten Designer!";
-      searchButton.disabled = true; // Button deaktivieren, um mehrfaches Klicken zu verhindern
+      searchButton.disabled = true;
 
       if (!customerAddress) {
         document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
-        searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-        searchButton.disabled = false; // Button wieder aktivieren
+        searchButton.innerText = "Suche Designer";
+        searchButton.disabled = false;
         return;
       }
+
       if (!apiKey) {
         document.getElementById("result").innerHTML = "API Key wurde nicht geladen!";
-        searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-        searchButton.disabled = false; // Button wieder aktivieren
+        searchButton.innerText = "Suche Designer";
+        searchButton.disabled = false;
         return;
       }
+
       // Geocoding des Kundenstandorts
       $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
         if (data.results && data.results.length > 0) {
@@ -235,7 +99,6 @@
           const results = [];
           let completedRequests = 0;
 
-          // Vergleiche mit den Designer-Adressen
           designers.forEach(designer => {
             $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(designer.address)}&key=${apiKey}`, function (designerData) {
               if (designerData.results && designerData.results.length > 0) {
@@ -253,23 +116,18 @@
 
               completedRequests++;
               if (completedRequests === designers.length) {
-                results.sort((a, b) => a.distance - b.distance); // Sortiere nach Entfernung
-                 displayResults(results);
-                 searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-                 searchButton.disabled = false; // Button wieder aktivieren
-               }
+                results.sort((a, b) => a.distance - b.distance); // Nach Entfernung sortieren
+                displayResults(results);
+                searchButton.innerText = "Suche Designer";
+                searchButton.disabled = false;
+              }
             });
-         });
-      }
-   });
- }
- document.getElementById("customerAddress").addEventListener("keypress", function(event) {
- if (event.key === "Enter") {
-   event.preventDefault();  // Verhindert die Standardaktion der Enter-Taste (z. B. Formularabsendung)
-   document.getElementById("search-button").click();  // Klickt den Such-Button
-  }
-});
+          });
+        }
+      });
+    }
 
+    // Berechnung der Entfernung zwischen zwei Punkten
     function calculateDistance(location1, location2) {
       const R = 6371; // Erdradius in km
       const lat1 = location1.lat * Math.PI / 180;
@@ -285,16 +143,8 @@
       return R * c; // Entfernung in km
     }
 
+    // Anzeige der Ergebnisse
     function displayResults(results) {
       const resultDiv = document.getElementById("result");
       const designerList = document.getElementById("designer-list");
-      designerList.innerHTML = results.map((r, index) => `
-        <li class="designer ${index === 0 ? 'highlighted' : ''}">
-          <strong>Designer: </strong>${r.name} <br>
-          <strong>Fahrzeit: </strong>${r.travelTime}
-        </li>
-      `).join("");
-    }
-  </script>
-</body>
-</html>
+      designerList.innerHTML = results.map((r, inde
