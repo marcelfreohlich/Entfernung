@@ -176,125 +176,82 @@
   </div>
 -->
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    const designers = [
-      { name: "Michi", address: "Josef Musser-Straße 11, 2514, Wienersdorf" },
-      { name: "Pek", address: "Keutschach 41, 9074, Keutschach" },
-      { name: "Sebi", address: "Unteraumühlweg 6a, 5400, Hallein" },
-      { name: "Mike", address: "Lisa Scholl Weg 4, 6170, Zirl" },
-      { name: "Laura", address: "Seeweg 16, 6212, Maurach" },
-      { name: "Stephan", address: "Hernsteiner Straße 42 Haus 8, 2551, Enzesfeld-Lindabrunn" },
-    ];
+<script>
+  let apiKey = null;
 
-    let apiKey = null;
-
-    function fetchApiKey() {
-      fetch('https://server-zzzi.onrender.com/get-api-key')
-        .then(response => response.json())
-        .then(data => {
-          apiKey = data.apiKey;
-          if (apiKey) {
-            console.log('API Key erfolgreich geladen');
-            document.getElementById('search-button').disabled = false;  // Button aktivieren, wenn API-Key geladen ist
-          } else {
-            console.error("API Key konnte nicht geladen werden.");
-          }
-        })
-        .catch(error => {
-          console.error('Fehler beim Abrufen des API-Schlüssels:', error);
-        });
-    }
-
-    // Beim Laden der Seite den API-Schlüssel abrufen
-    window.onload = fetchApiKey;
-
-    function findNearestDesigner() {
-      const customerAddress = document.getElementById("customerAddress").value;
-      const searchButton = document.getElementById("search-button");
-
-      // Button-Text ändern während der Anfrage läuft
-      searchButton.innerText = "Chill, ich such doch schon den Nächsten Designer!";
-      searchButton.disabled = true; // Button deaktivieren, um mehrfaches Klicken zu verhindern
-
-      if (!customerAddress) {
-        document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
-        searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-        searchButton.disabled = false; // Button wieder aktivieren
-        return;
-      }
-      if (!apiKey) {
-        document.getElementById("result").innerHTML = "API Key wurde nicht geladen!";
-        searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-        searchButton.disabled = false; // Button wieder aktivieren
-        return;
-      }
-      // Geocoding des Kundenstandorts
-      $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
-        if (data.results && data.results.length > 0) {
-          const customerLocation = data.results[0].geometry;
-          const results = [];
-          let completedRequests = 0;
-
-          // Vergleiche mit den Designer-Adressen
-          designers.forEach(designer => {
-            $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(designer.address)}&key=${apiKey}`, function (designerData) {
-              if (designerData.results && designerData.results.length > 0) {
-                const designerLocation = designerData.results[0].geometry;
-                const distance = calculateDistance(customerLocation, designerLocation);
-                const travelTime = (distance / 50) * 60;
-                const hours = Math.floor(travelTime / 60);
-                const minutes = Math.round(travelTime % 60);
-                results.push({
-                  name: designer.name,
-                  travelTime: `${hours} Stunden und ${minutes} Minuten`,
-                  distance,
-                });
-              }
-
-              completedRequests++;
-              if (completedRequests === designers.length) {
-                results.sort((a, b) => a.distance - b.distance); // Sortiere nach Entfernung
-                 displayResults(results);
-                 searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
-                 searchButton.disabled = false; // Button wieder aktivieren
-               }
-            });
-         });
-      }
-   });
- }
- document.getElementById("customerAddress").addEventListener("keypress", function(event) {
- if (event.key === "Enter") {
-   event.preventDefault();  // Verhindert die Standardaktion der Enter-Taste (z. B. Formularabsendung)
-   document.getElementById("search-button").click();  // Klickt den Such-Button
+  function fetchApiKey() {
+    fetch('https://server-zzzi.onrender.com/get-api-key')
+      .then(response => response.json())
+      .then(data => {
+        apiKey = data.apiKey;
+        if (apiKey) {
+          console.log('API Key erfolgreich geladen');
+          document.getElementById('search-button').disabled = false;  // Button aktivieren, wenn API-Key geladen ist
+        } else {
+          console.error("API Key konnte nicht geladen werden.");
+        }
+      })
+      .catch(error => {
+        console.error('Fehler beim Abrufen des API-Schlüssels:', error);
+      });
   }
-});
 
-    function calculateDistance(location1, location2) {
-      const R = 6371; // Erdradius in km
-      const lat1 = location1.lat * Math.PI / 180;
-      const lon1 = location1.lng * Math.PI / 180;
-      const lat2 = location2.lat * Math.PI / 180;
-      const lon2 = location2.lng * Math.PI / 180;
-      const dLat = lat2 - lat1;
-      const dLon = lon2 - lon1;
-      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1) * Math.cos(lat2) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c; // Entfernung in km
+  // Beim Laden der Seite den API-Schlüssel abrufen
+  window.onload = fetchApiKey;
+
+  async function findNearestDesigner() {
+    const customerAddress = document.getElementById("customerAddress").value;
+    const searchButton = document.getElementById("search-button");
+
+    // Button-Text ändern während der Anfrage läuft
+    searchButton.innerText = "Chill, ich such doch schon den Nächsten Designer!";
+    searchButton.disabled = true; // Button deaktivieren, um mehrfaches Klicken zu verhindern
+
+    if (!customerAddress) {
+      document.getElementById("result").innerHTML = "Bitte gib eine Adresse ein!";
+      searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
+      searchButton.disabled = false; // Button wieder aktivieren
+      return;
+    }
+    if (!apiKey) {
+      document.getElementById("result").innerHTML = "API Key wurde nicht geladen!";
+      searchButton.innerText = "Suche Designer"; // Button-Text zurücksetzen
+      searchButton.disabled = false; // Button wieder aktivieren
+      return;
     }
 
-    function displayResults(results) {
-      const resultDiv = document.getElementById("result");
-      const designerList = document.getElementById("designer-list");
-      designerList.innerHTML = results.map((r, index) => `
-        <li class="designer ${index === 0 ? 'highlighted' : ''}">
-          <strong>Designer: </strong>${r.name} <br>
-          <strong>Fahrzeit: </strong>${r.travelTime}
-        </li>
-      `).join("");
+    // Geocoding des Kundenstandorts
+    $.get(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(customerAddress)}&key=${apiKey}`, function (data) {
+      if (data.results && data.results.length > 0) {
+        const customerLocation = data.results[0].geometry;
+
+        // Anfrage an Backend, um den nächsten Designer zu finden
+        $.post('https://server-zzzi.onrender.com/api/get-nearest-designer', JSON.stringify({ address: customerAddress }), function (response) {
+          if (response.name) {
+            document.getElementById("result").innerHTML = `Nächster Designer: ${response.name}`;
+          } else {
+            document.getElementById("result").innerHTML = "Kein Designer gefunden.";
+          }
+        }).fail(function () {
+          document.getElementById("result").innerHTML = "Fehler bei der Anfrage.";
+        });
+      } else {
+        document.getElementById("result").innerHTML = "Adresse konnte nicht gefunden werden!";
+      }
+
+      // Button-Text zurücksetzen
+      searchButton.innerText = "Suche Designer";
+      searchButton.disabled = false;
+    });
+  }
+
+  document.getElementById("customerAddress").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();  // Verhindert die Standardaktion der Enter-Taste (z. B. Formularabsendung)
+      document.getElementById("search-button").click();  // Klickt den Such-Button
     }
-  </script>
+  });
+</script>
+
 </body>
 </html>
